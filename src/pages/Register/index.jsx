@@ -14,7 +14,7 @@ export default function Register() {
     return (
         <main className='page center-align'>
             <h1 className='title'>Crie a sua conta aqui!</h1>
-            <form className='register-form vertical-align'>
+            <form className='form vertical-align'>
                 <div className='input-label'>
                     <label className='label' htmlFor='name'>Nome</label>
                     <input
