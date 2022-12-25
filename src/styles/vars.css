@@ -1,0 +1,7 @@
+body {
+    --white: white;
+    --black: black;
+    --lightgray: rgb(184, 184, 184);
+    --text-color: rgb(38, 38, 38);
+    --bg-color: rgb(9, 2, 2);
+}
