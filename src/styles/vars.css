@@ -1,7 +1,10 @@
 body {
-    --white: white;
-    --black: black;
-    --lightgray: rgb(184, 184, 184);
-    --text-color: rgb(38, 38, 38);
-    --bg-color: rgb(9, 2, 2);
+    --white: #fff;
+    --black: #000;
+    --lightgray: #b8b8b8;
+    --text-color: #262626;
+    --bg-color: #e0e0e0;
+    --color-shadow: #acacac;
+    --double-shadow: 13px 13px 36px var(--color-shadow), -13px -13px 36px var(--white);
+    --red-action: #ae0000;
 }

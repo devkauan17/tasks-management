@@ -9,12 +9,13 @@
     all: unset;
     border-radius: 1rem;
     padding: 1.3rem;
-    box-shadow: 13px 13px 36px #acacac75;
+    box-shadow: 13px 13px 36px var(--color-shadow);
 }
 
 .input,
 .button {
     font-size: 1.5rem;
+    background-color: var(--bg-color);
 }
 
 .label,
@@ -31,7 +32,9 @@
 }
 
 .button,
-.button:hover {
+.button:hover,
+.task-action:hover,
+.task-action {
     transition: .5s;
 }
 
@@ -41,7 +44,8 @@
     margin-bottom: 1rem;
 }
 
-.button:hover {
+.button:hover,
+.task-action:hover {
     transform: scale(1.06);
     letter-spacing: .2px;
 }
@@ -55,10 +59,20 @@
 
 .form {
     width: 27%;
+}
+
+
+.form,
+.form-task,
+.modal-content {
     padding: 3rem;
     border-radius: 15px;
-    background: #e0e0e0;
-    box-shadow: 13px 13px 36px #acacac, -13px -13px 36px #ffffff;
+}
+
+.form,
+.form-task {
+    background: var(--bg-color);
+    box-shadow: var(--double-shadow);
     margin-top: 2.5rem;
 }
 

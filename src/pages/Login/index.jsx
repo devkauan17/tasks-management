@@ -11,11 +11,14 @@ export default function Login() {
         password: ''
     })
 
+    async function handleSubmit() {
+
+    }
 
     return (
         <main className='page center-align'>
             <h1 className='title'>Faça o login aqui!</h1>
-            <form className='form vertical-align'>
+            <form className='form vertical-align' onSubmit={handleSubmit}>
                 <div className='input-label'>
                     <label className='label' htmlFor='email'>Email</label>
                     <input

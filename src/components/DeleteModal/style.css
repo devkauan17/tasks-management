@@ -1,0 +1,6 @@
+.modal-buttons {
+    width: 60%;
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.8rem;
+}

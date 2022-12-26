@@ -10,11 +10,18 @@ export default function Register() {
         password: ''
     })
 
+    async function handleSubmit() {
+        try {
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <main className='page center-align'>
             <h1 className='title'>Crie a sua conta aqui!</h1>
-            <form className='form vertical-align'>
+            <form className='form vertical-align' onSubmit={handleSubmit}>
                 <div className='input-label'>
                     <label className='label' htmlFor='name'>Nome</label>
                     <input
