@@ -8,9 +8,9 @@ export default function DeleteModal({ deleteInfos, setDeleteInfos }) {
         setDeleteInfos({ id: '', show: false })
     }
 
-    async function handleDelete(id) {
+    async function handleDelete(e) {
+        e.preventDefault()
         try {
-
 
             handleClose()
         } catch (error) {
@@ -28,7 +28,7 @@ export default function DeleteModal({ deleteInfos, setDeleteInfos }) {
                 <ReportProblemRoundedIcon sx={{ fontSize: '10rem' }} />
                 <h1 className='title'>Quer mesmo excluir?</h1>
                 <div className='modal-buttons'>
-                    <button className='button' onClick={() => handleDelete(deleteInfos.id)}>Excluir</button>
+                    <button className='button' onClick={handleDelete}>Excluir</button>
                     <button className='button' onClick={handleClose}>Cancelar</button>
                 </div>
             </div>

@@ -34,7 +34,8 @@
 .button,
 .button:hover,
 .task-action:hover,
-.task-action {
+.task-action,
+.button:disabled {
     transition: .5s;
 }
 
@@ -81,4 +82,9 @@
     flex-direction: column;
     margin-bottom: 1.8rem;
     width: 100%;
+}
+
+.button:disabled {
+    background-color: var(--lightgray);
+    cursor: not-allowed;
 }

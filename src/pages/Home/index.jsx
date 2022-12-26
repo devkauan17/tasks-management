@@ -3,8 +3,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import DeleteModal from '../../components/DeleteModal';
+import EditModal from '../../components/EditModal';
 
 export default function Home() {
+
+    const [addTaskValue, setAddTaskValue] = useState('')
 
     const [deleteInfos, setDeleteInfos] = useState({
         id: '',
@@ -16,15 +19,32 @@ export default function Home() {
         show: false
     })
 
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        try {
+
+        } catch (error) {
+            return console.log(error)
+        }
+
+    }
+
     return (
         <main className='page page-tasks center-align'>
             <h1 className='title'>Tarefas</h1>
-            <form className='form-task vertical-align'>
+            <form className='form-task vertical-align' onSubmit={handleSubmit}>
                 <h1 className='title'>Adicionar tarefa</h1>
 
                 <div className='input-button-task'>
-                    <input className='input' type="text" style={{ marginBottom: '1rem' }} />
-                    <button className='button' type="submit">Enviar</button>
+                    <input
+                        className='input'
+                        type="text"
+                        style={{ marginBottom: '1rem' }}
+                        value={addTaskValue}
+                        onChange={(e) => setAddTaskValue(e.target.value)}
+                    />
+                    <button className='button' type="submit" disabled={addTaskValue ? false : true}>Enviar</button>
                 </div>
 
             </form>
@@ -49,7 +69,7 @@ export default function Home() {
 
             </section>
             {deleteInfos.show && <DeleteModal deleteInfos={deleteInfos} setDeleteInfos={setDeleteInfos} />}
-            {/* {editInfos.show && } */}
+            {editInfos.show && <EditModal editInfos={editInfos} setEditInfos={setEditInfos} />}
         </main>
     )
 
