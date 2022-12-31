@@ -20,7 +20,8 @@ export default function PasswordInput({ ...props }) {
                 placeholder='Digite uma senha'
                 id='password'
                 value={props.value}
-                onChange={props.onChange} />
+                onChange={props.onChange}
+                required />
             <button className='password-button'
                 type='button'
                 onClick={() => setVisibility(!visibility)}

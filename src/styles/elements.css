@@ -85,6 +85,12 @@
 }
 
 .button:disabled {
-    background-color: var(--lightgray);
+    opacity: 0.3;
     cursor: not-allowed;
+}
+
+.span-error {
+    color: var(--red-action);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
 }

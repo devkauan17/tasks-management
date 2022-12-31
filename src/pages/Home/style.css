@@ -1,5 +1,25 @@
 .page-tasks {
     padding: 5rem;
+    position: relative;
+}
+
+.tasks-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.06);
+    box-shadow: 13px 13px 36px -10px rgba(172, 172, 172, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.8rem
+}
+
+.tasks-header-button {
+    width: 15% !important;
+    margin: 0 !important;
 }
 
 .form-task,
@@ -25,10 +45,12 @@
 
 }
 
+
+
 .tasks-list {
     padding: 3rem;
-    background: var(--bg-color);
     box-shadow: var(--double-shadow);
+    background: var(--bg-color);
     margin-top: 2.5rem;
 }
 
@@ -44,7 +66,9 @@
 .task-description {
     width: 88%;
     font-size: 1.6rem;
-    margin-right: 1rem;
+    margin-right: 1.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .task-actions {

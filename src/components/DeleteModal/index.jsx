@@ -1,6 +1,7 @@
 import Modal from '@mui/material/Modal';
 import ReportProblemRoundedIcon from '@mui/icons-material/ReportProblemRounded';
 import './style.css'
+import instance from '../../services/instance';
 
 export default function DeleteModal({ deleteInfos, setDeleteInfos }) {
 
@@ -12,6 +13,9 @@ export default function DeleteModal({ deleteInfos, setDeleteInfos }) {
         e.preventDefault()
         try {
 
+            await instance.delete(`/task/${deleteInfos.id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            })
             handleClose()
         } catch (error) {
             return console.log(error)

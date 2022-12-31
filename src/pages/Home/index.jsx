@@ -1,72 +1,122 @@
 import './style.css'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DeleteModal from '../../components/DeleteModal';
 import EditModal from '../../components/EditModal';
+import { useNavigate } from 'react-router-dom';
+import instance from '../../services/instance';
 
 export default function Home() {
+    const navigate = useNavigate()
 
     const [addTaskValue, setAddTaskValue] = useState('')
+    const [listTasks, setListTasks] = useState([])
 
     const [deleteInfos, setDeleteInfos] = useState({
         id: '',
         show: false
     })
 
-    const [editInfos, setEditInfos] = useState({
-        id: '',
-        show: false
-    })
+    const [editInfos, setEditInfos] = useState([])
 
-    async function handleSubmit(e) {
+    const [userInfos, setUserInfos] = useState([])
+
+    async function handleAddTask(e) {
         e.preventDefault()
 
         try {
+            await instance.post('/task', { description: addTaskValue, completed: false }, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            });
+            handleListTasks();
+            return setAddTaskValue('');
 
         } catch (error) {
             return console.log(error)
-        }
+        };
 
+    };
+
+    async function handleListTasks() {
+        try {
+            const { data } = await instance.get('/tasks', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            })
+
+            return setListTasks(data.sort((a, b) => { return a.id - b.id }))
+        } catch (error) {
+            return console.log(error)
+        }
+    };
+
+    async function handleGetUser() {
+        try {
+            const { data } = await instance.get('/user', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            })
+            setUserInfos(data)
+        } catch (error) {
+            return console.log(error)
+        }
     }
 
+    useEffect(() => {
+        if (!localStorage.getItem('token')) { return navigate('/') }
+        handleListTasks()
+        handleGetUser()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteInfos, editInfos])
+
     return (
-        <main className='page page-tasks center-align'>
-            <h1 className='title'>Tarefas</h1>
-            <form className='form-task vertical-align' onSubmit={handleSubmit}>
-                <h1 className='title'>Adicionar tarefa</h1>
+        <main className='page'>
+            <header className='tasks-header'>
+                <h1 className='title'>{userInfos.name}</h1>
+                <button className='button tasks-header-button'>Minha conta</button>
+            </header>
 
-                <div className='input-button-task'>
-                    <input
-                        className='input'
-                        type="text"
-                        style={{ marginBottom: '1rem' }}
-                        value={addTaskValue}
-                        onChange={(e) => setAddTaskValue(e.target.value)}
-                    />
-                    <button className='button' type="submit" disabled={addTaskValue ? false : true}>Enviar</button>
-                </div>
+            <section className=' page-tasks center-align'>
 
-            </form>
-            <section className='tasks-list center-align'>
-                <h1 className='title'>Listagem de tarefas</h1>
+                <h1 className='title'>Tarefas</h1>
+                <form className='form-task vertical-align' onSubmit={handleAddTask}>
+                    <h1 className='title'>Adicionar tarefa</h1>
 
-                <div className='tasks-row'>
-                    <h2 className='task-description'>descrição</h2>
-                    <div className='task-actions'>
-                        <DeleteIcon
-                            className='task-action'
-                            sx={{ fontSize: 'large' }}
-                            onClick={() => setDeleteInfos({ ...deleteInfos, show: true })} />
-                        <EditIcon
-                            className='task-action'
-                            sx={{ fontSize: 'large' }}
-                            onClick={() => setEditInfos({ ...editInfos, show: !editInfos.show })} />
+                    <div className='input-button-task'>
+                        <input
+                            className='input'
+                            type="text"
+                            style={{ marginBottom: '1rem' }}
+                            value={addTaskValue}
+                            onChange={(e) => setAddTaskValue(e.target.value)}
+                        />
+                        <button className='button' type="submit" disabled={addTaskValue ? false : true}>Enviar</button>
                     </div>
 
-                </div>
+                </form>
+                <section className='tasks-list center-align'>
+                    <h1 className='title'>Listagem de tarefas</h1>
 
+                    {listTasks.map(task => (
 
+                        <div className='tasks-row' key={task.id}>
+                            <h2 className='task-description'
+                                style={{ textDecoration: task.completed && 'line-through' }}
+                            >{task.description}</h2>
+                            <div className='task-actions'>
+                                <DeleteIcon
+                                    className='task-action'
+                                    sx={{ fontSize: 'large' }}
+                                    onClick={() => setDeleteInfos({ id: task.id, show: !deleteInfos.show })} />
+                                <EditIcon
+                                    className='task-action'
+                                    sx={{ fontSize: 'large' }}
+                                    onClick={() => setEditInfos({ ...task, show: true })} />
+                            </div>
+
+                        </div>
+                    ))}
+
+                </section>
             </section>
             {deleteInfos.show && <DeleteModal deleteInfos={deleteInfos} setDeleteInfos={setDeleteInfos} />}
             {editInfos.show && <EditModal editInfos={editInfos} setEditInfos={setEditInfos} />}
