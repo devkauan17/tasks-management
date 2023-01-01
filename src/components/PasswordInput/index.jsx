@@ -15,10 +15,10 @@ export default function PasswordInput({ ...props }) {
     return (
         <div className='password-content'>
             <input
-                className='input'
+                className={`input ${props.className && props.className}`}
                 type={visibility ? 'text' : 'password'}
                 placeholder='Digite uma senha'
-                id='password'
+                id={props.id}
                 value={props.value}
                 onChange={props.onChange}
                 required />

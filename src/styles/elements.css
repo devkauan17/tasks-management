@@ -92,5 +92,12 @@
 .span-error {
     color: var(--red-action);
     margin-bottom: 1rem;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.input-error {
+    /* border: 1.12px solid var(--red-action); */
+    box-shadow: 1px 13px 20px #ae00005c;
 }

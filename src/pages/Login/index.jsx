@@ -14,25 +14,36 @@ export default function Login() {
         password: ''
     })
 
-    const [loginError, setLoginError] = useState({
-        message: '',
-        show: false,
-    })
+    const [loginError, setLoginError] = useState({ message: '', type: '' })
 
 
     async function handleLogin(e) {
         e.preventDefault();
+        setLoginError({ message: '', type: '' })
 
         try {
-            setLoginError({ message: '', show: false })
             const { data } = await instance.post('/login', { ...loginForm });
             localStorage.setItem('token', data.token);
             return navigate('/dashboard')
         } catch (error) {
-            if (error.response.data === 'Email ou senha inválida.') {
-                return setLoginError({ message: error.response.data, show: true })
+            const message = error.response.data;
+
+            if (message === 'Email ou senha inválida.') {
+                return setLoginError({ message, type: 'invalidLogin' })
             }
-            return console.log(error)
+
+            if (message === 'Email no formato inválido.') {
+                setLoginForm({ ...loginForm, email: '' })
+                return setLoginError({ message, type: 'invalidEmail' })
+            }
+
+            if (message === 'A senha precisa ter no mínimo 6 caracteres.') {
+                setLoginForm({ ...loginForm, password: '' })
+                return setLoginError({ message, type: 'invalidPass' })
+            }
+
+            console.log(error)
+            return setLoginError({ message: 'Erro interno. Tente Novamente.', type: '' })
         }
 
     }
@@ -50,7 +61,7 @@ export default function Login() {
                 <div className='input-label'>
                     <label className='label' htmlFor='email'>Email</label>
                     <input
-                        className='input'
+                        className={`input ${loginError.type === 'invalidEmail' || loginError.type === 'invalidLogin' ? 'input-error' : ''}`}
                         type="email"
                         placeholder='Digite um email'
                         id='email'
@@ -61,12 +72,14 @@ export default function Login() {
                 <div className='input-label'>
                     <label className='label' htmlFor='password'>Senha</label>
                     <PasswordInput
+                        className={loginError.type === 'invalidLogin' || loginError.type === 'invalidPass' ? 'input-error' : ''}
+                        id='password'
                         value={loginForm.password}
                         onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                     />
                 </div>
                 <button className='button' type='submit' disabled={!loginForm.email || !loginForm.password ? true : false}>Logar</button>
-                {loginError.show && <span className='span-error'>{loginError.message}</span>}
+                {loginError.message && <span className='span-error'>{loginError.message}</span>}
                 <Link className='link' to='/register'>Não tem uma conta? Registre-se</Link>
             </form>
         </main>

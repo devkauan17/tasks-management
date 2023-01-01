@@ -32,7 +32,6 @@ export default function EditModal({ editInfos, setEditInfos }) {
             onClose={handleClose}
         >
             <form className='modal-content vertical-align' onSubmit={handleEdit}>
-                {console.log(editInfos)}
                 <h1 className='title' style={{ marginBottom: '1rem' }}>Editar tarefa</h1>
                 <input className='input'
                     type="text"

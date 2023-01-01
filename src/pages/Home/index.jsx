@@ -6,6 +6,7 @@ import DeleteModal from '../../components/DeleteModal';
 import EditModal from '../../components/EditModal';
 import { useNavigate } from 'react-router-dom';
 import instance from '../../services/instance';
+import UserModal from '../../components/UserModal';
 
 export default function Home() {
     const navigate = useNavigate()
@@ -23,7 +24,7 @@ export default function Home() {
     const [userInfos, setUserInfos] = useState([])
 
     async function handleAddTask(e) {
-        e.preventDefault()
+        e.preventDefault();
 
         try {
             await instance.post('/task', { description: addTaskValue, completed: false }, {
@@ -55,7 +56,7 @@ export default function Home() {
             const { data } = await instance.get('/user', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             })
-            setUserInfos(data)
+            setUserInfos({ ...data, show: false })
         } catch (error) {
             return console.log(error)
         }
@@ -65,14 +66,23 @@ export default function Home() {
         if (!localStorage.getItem('token')) { return navigate('/') }
         handleListTasks()
         handleGetUser()
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deleteInfos, editInfos])
+
+    // useEffect(() => {
+    //     handleGetUser()
+
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [userInfos.show])
 
     return (
         <main className='page'>
             <header className='tasks-header'>
                 <h1 className='title'>{userInfos.name}</h1>
-                <button className='button tasks-header-button'>Minha conta</button>
+                <button className='button tasks-header-button'
+                    onClick={() => setUserInfos({ ...userInfos, show: true })}
+                >Minha conta</button>
             </header>
 
             <section className=' page-tasks center-align'>
@@ -85,6 +95,7 @@ export default function Home() {
                         <input
                             className='input'
                             type="text"
+                            placeholder='Adicione uma tarefa...'
                             style={{ marginBottom: '1rem' }}
                             value={addTaskValue}
                             onChange={(e) => setAddTaskValue(e.target.value)}
@@ -120,6 +131,7 @@ export default function Home() {
             </section>
             {deleteInfos.show && <DeleteModal deleteInfos={deleteInfos} setDeleteInfos={setDeleteInfos} />}
             {editInfos.show && <EditModal editInfos={editInfos} setEditInfos={setEditInfos} />}
+            {userInfos.show && <UserModal userInfos={userInfos} setUserInfos={setUserInfos} />}
         </main>
     )
 
