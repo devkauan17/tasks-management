@@ -27,6 +27,14 @@
     width: 50%;
 }
 
+.form-task {
+    padding: 3rem;
+    border-radius: 15px;
+    background: var(--bg-color);
+    box-shadow: var(--double-shadow);
+    margin-top: 2.5rem;
+}
+
 .input-button-task {
     width: 70%;
     display: flex;
@@ -83,4 +91,65 @@
 
 .task-action:nth-child(1) {
     color: var(--red-action);
+}
+
+@media (max-width:1000px) {
+    .task-actions {
+        width: 73%;
+    }
+
+    .task-actions {
+        width: 27%;
+    }
+}
+
+@media (max-width:600px) {
+
+    .page-tasks,
+    .tasks-header {
+        padding: 2rem 1rem;
+    }
+
+    .tasks-header-button {
+        width: 30% !important;
+    }
+
+    .form-task,
+    .tasks-list {
+        width: 87%;
+    }
+}
+
+@media (max-width:420px) {
+
+
+
+    .tasks-header-button {
+        font-size: 1.3rem !important;
+    }
+
+    .tasks-header .title,
+    .input-button-task .button {
+        font-size: 1.6rem !important;
+    }
+
+    .form-task,
+    .tasks-list {
+        width: 100%;
+        padding: 2rem 1rem;
+    }
+
+    .form-task .input {
+        width: 100% !important;
+    }
+
+    .input-button-task {
+        width: 80%;
+    }
+
+    .tasks-list {
+        box-shadow: none !important;
+        background-color: transparent;
+
+    }
 }
