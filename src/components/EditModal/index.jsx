@@ -18,8 +18,8 @@ export default function EditModal({ editInfos, setEditInfos }) {
             }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             })
-
             handleClose()
+
         } catch (error) {
             return console.log(error)
         }

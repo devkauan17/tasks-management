@@ -21,7 +21,7 @@ export default function PasswordInput({ ...props }) {
                 id={props.id}
                 value={props.value}
                 onChange={props.onChange}
-                required />
+            />
             <button className='password-button'
                 type='button'
                 onClick={() => setVisibility(!visibility)}

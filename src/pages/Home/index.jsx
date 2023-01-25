@@ -9,6 +9,7 @@ import instance from '../../services/instance';
 import UserModal from '../../components/UserModal';
 
 export default function Home() {
+    const token = localStorage.getItem('token')
     const navigate = useNavigate()
 
     const [addTaskValue, setAddTaskValue] = useState('')
@@ -21,14 +22,14 @@ export default function Home() {
 
     const [editInfos, setEditInfos] = useState([])
 
-    const [userInfos, setUserInfos] = useState([])
+    const [userInfos, setUserInfos] = useState({ show: false })
 
     async function handleAddTask(e) {
         e.preventDefault();
 
         try {
             await instance.post('/task', { description: addTaskValue, completed: false }, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${token}` },
             });
             handleListTasks();
             return setAddTaskValue('');
@@ -42,7 +43,7 @@ export default function Home() {
     async function handleListTasks() {
         try {
             const { data } = await instance.get('/tasks', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${token}` },
             })
 
             return setListTasks(data.sort((a, b) => { return a.id - b.id }))
@@ -54,9 +55,10 @@ export default function Home() {
     async function handleGetUser() {
         try {
             const { data } = await instance.get('/user', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                headers: { Authorization: `Bearer ${token}` },
             })
-            setUserInfos({ ...data, show: false })
+            setUserInfos({ ...data })
+            console.log(userInfos)
         } catch (error) {
             return console.log(error)
         }
@@ -69,12 +71,6 @@ export default function Home() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deleteInfos, editInfos])
-
-    // useEffect(() => {
-    //     handleGetUser()
-
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [userInfos.show])
 
     return (
         <main className='page'>

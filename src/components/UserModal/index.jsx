@@ -9,8 +9,8 @@ export default function UserModal({ userInfos, setUserInfos }) {
 
     const [userModal, setUserModal] = useState({
         ...userInfos,
-        password: '',
-        confirmPassword: ''
+        currentPassword: '',
+        newPassword: ''
     });
 
     const [userError, setUserError] = useState({ message: '', type: '' })
@@ -25,16 +25,23 @@ export default function UserModal({ userInfos, setUserInfos }) {
             await instance.put('/user', {
                 name: userModal.name,
                 email: userModal.email,
-                password: userModal.password
+                currentPassword: userModal.currentPassword,
+                password: userModal.newPassword
             }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
+            location.reload()
             handleClose();
         } catch (error) {
             const message = error.response.data;
 
             if (message === 'A senha precisa ter no mínimo 6 caracteres.') {
-                setUserModal({ ...userModal, password: '', confirmPassword: '' })
+                setUserModal({ ...userModal, currentPassword: '', newPassword: '' })
+                return setUserError({ message, type: 'invalidPass' })
+            }
+
+            if (message === 'Senha incorreta.') {
+                setUserModal({ ...userModal, currentPassword: '' })
                 return setUserError({ message, type: 'invalidPass' })
             }
 
@@ -85,29 +92,30 @@ export default function UserModal({ userInfos, setUserInfos }) {
                     />
                 </div>
                 <div className='input-label'>
-                    <label className='label' htmlFor='password'>Senha</label>
+                    <label className='label' htmlFor='currentPassword'>Senha Atual</label>
                     <PasswordInput
-                        id='password'
+                        id='currentPassword'
                         className={userError.type === 'invalidPass' && 'input-error'}
-                        value={userModal.password}
-                        onChange={(e) => setUserModal({ ...userModal, password: e.target.value })}
+                        value={userModal.currentPassword}
+                        onChange={(e) => setUserModal({ ...userModal, currentPassword: e.target.value })}
                     />
                 </div>
                 <div className='input-label'>
-                    <label className='label' htmlFor='confirmPassword'>Confirmar senha</label>
+                    <label className='label' htmlFor='newPassword'>Nova senha</label>
                     <PasswordInput
-                        id='confirmPassword'
-                        value={userModal.confirmPassword}
-                        onChange={(e) => setUserModal({ ...userModal, confirmPassword: e.target.value })}
+                        id='newPassword'
+                        value={userModal.newPassword}
+                        onChange={(e) => setUserModal({ ...userModal, newPassword: e.target.value })}
                     />
                 </div>
                 {userError.message && <span className='span-error'>{userError.message}</span>}
                 <div className='modal-buttons'>
-                    <button className='button' type='submit' disabled={!userModal.name ||
-                        !userModal.email ||
-                        !userModal.password ||
-                        !userModal.confirmPassword ||
-                        (userModal.password !== userModal.confirmPassword) ? true : false}>Atualizar dados</button>
+                    <button className='button' type='submit' disabled={
+                        !userModal.name ||
+                            !userModal.email ||
+                            !userModal.newPassword ||
+                            !userModal.currentPassword ? true : false
+                    }>Atualizar dados</button>
                     <button className='button' type='button' onClick={handleLogout}>Logout</button>
                 </div>
             </form>
