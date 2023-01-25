@@ -19,17 +19,22 @@ export default function Home() {
         handleGetUser, token
     } = useContext(GlobalContext);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const [addTaskValue, setAddTaskValue] = useState('')
-    const [listTasks, setListTasks] = useState([])
+    const [addTaskValue, setAddTaskValue] = useState('');
+    const [listTasks, setListTasks] = useState([]);
     const [taskError, setTaskError] = useState({
         message: '',
         type: ''
-    })
+    });
 
     async function handleAddTask(e) {
         e.preventDefault();
+
+        setTaskError({
+            message: '',
+            type: ''
+        });
 
         try {
             await instance.post('/task', { description: addTaskValue, completed: false }, {
@@ -45,8 +50,6 @@ export default function Home() {
                 setTaskError({ message, type: 'AlreadyTask' })
                 return setAddTaskValue('')
             }
-
-
 
             console.log(error)
             return setTaskError({ message: 'Erro interno. Tente novamente.', type: '' })
