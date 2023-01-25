@@ -1,10 +1,15 @@
 import { Modal } from "@mui/material";
+import { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../../providers/globalContext";
 import instance from "../../services/instance";
 import PasswordInput from "../PasswordInput";
 
-export default function UserModal({ userInfos, setUserInfos }) {
+export default function UserModal() {
+
+    const { userInfos, setUserInfos, handleGetUser } = useContext(GlobalContext)
+
     const navigate = useNavigate();
 
     const [userModal, setUserModal] = useState({
@@ -30,7 +35,7 @@ export default function UserModal({ userInfos, setUserInfos }) {
             }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            location.reload()
+            handleGetUser()
             handleClose();
         } catch (error) {
             const message = error.response.data;

@@ -2,8 +2,12 @@ import Modal from '@mui/material/Modal';
 import ReportProblemRoundedIcon from '@mui/icons-material/ReportProblemRounded';
 import './style.css'
 import instance from '../../services/instance';
+import { useContext } from 'react';
+import { GlobalContext } from '../../providers/globalContext';
 
-export default function DeleteModal({ deleteInfos, setDeleteInfos }) {
+export default function DeleteModal() {
+
+    const { deleteInfos, setDeleteInfos } = useContext(GlobalContext)
 
     function handleClose() {
         setDeleteInfos({ id: '', show: false })

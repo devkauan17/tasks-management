@@ -1,9 +1,13 @@
 import { Modal } from '@mui/material'
+import { useContext } from 'react'
 import { useState } from 'react'
+import { GlobalContext } from '../../providers/globalContext'
 import instance from '../../services/instance'
 import './style.css'
 
-export default function EditModal({ editInfos, setEditInfos }) {
+export default function EditModal() {
+
+    const { editInfos, setEditInfos } = useContext(GlobalContext)
 
     function handleClose() {
         setEditInfos({ id: '', value: [], show: false })

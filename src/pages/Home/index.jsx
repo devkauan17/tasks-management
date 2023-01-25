@@ -1,28 +1,32 @@
 import './style.css'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DeleteModal from '../../components/DeleteModal';
 import EditModal from '../../components/EditModal';
 import { useNavigate } from 'react-router-dom';
 import instance from '../../services/instance';
 import UserModal from '../../components/UserModal';
+import { GlobalContext } from '../../providers/globalContext';
+import { spacing } from '@mui/system';
 
 export default function Home() {
-    const token = localStorage.getItem('token')
+
+    const {
+        deleteInfos, setDeleteInfos,
+        editInfos, setEditInfos,
+        userInfos, setUserInfos,
+        handleGetUser, token
+    } = useContext(GlobalContext);
+
     const navigate = useNavigate()
 
     const [addTaskValue, setAddTaskValue] = useState('')
     const [listTasks, setListTasks] = useState([])
-
-    const [deleteInfos, setDeleteInfos] = useState({
-        id: '',
-        show: false
+    const [taskError, setTaskError] = useState({
+        message: '',
+        type: ''
     })
-
-    const [editInfos, setEditInfos] = useState([])
-
-    const [userInfos, setUserInfos] = useState({ show: false })
 
     async function handleAddTask(e) {
         e.preventDefault();
@@ -35,7 +39,17 @@ export default function Home() {
             return setAddTaskValue('');
 
         } catch (error) {
-            return console.log(error)
+            const message = error.response.data
+
+            if (message === 'Essa tarefa já existe.') {
+                setTaskError({ message, type: 'AlreadyTask' })
+                return setAddTaskValue('')
+            }
+
+
+
+            console.log(error)
+            return setTaskError({ message: 'Erro interno. Tente novamente.', type: '' })
         };
 
     };
@@ -52,18 +66,6 @@ export default function Home() {
         }
     };
 
-    async function handleGetUser() {
-        try {
-            const { data } = await instance.get('/user', {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            setUserInfos({ ...data })
-            console.log(userInfos)
-        } catch (error) {
-            return console.log(error)
-        }
-    }
-
     useEffect(() => {
         if (!localStorage.getItem('token')) { return navigate('/') }
         handleListTasks()
@@ -71,6 +73,7 @@ export default function Home() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deleteInfos, editInfos])
+
 
     return (
         <main className='page'>
@@ -89,13 +92,14 @@ export default function Home() {
 
                     <div className='input-button-task'>
                         <input
-                            className='input'
+                            className={`input ${taskError.type === 'AlreadyTask' && 'input-error'}`}
                             type="text"
                             placeholder='Adicione uma tarefa...'
                             style={{ marginBottom: '1rem' }}
                             value={addTaskValue}
                             onChange={(e) => setAddTaskValue(e.target.value)}
                         />
+                        {taskError && <span className='span-error'>{taskError.message}</span>}
                         <button className='button' type="submit" disabled={addTaskValue ? false : true}>Enviar</button>
                     </div>
 
@@ -125,9 +129,9 @@ export default function Home() {
 
                 </section>
             </section>
-            {deleteInfos.show && <DeleteModal deleteInfos={deleteInfos} setDeleteInfos={setDeleteInfos} />}
-            {editInfos.show && <EditModal editInfos={editInfos} setEditInfos={setEditInfos} />}
-            {userInfos.show && <UserModal userInfos={userInfos} setUserInfos={setUserInfos} />}
+            {deleteInfos.show && <DeleteModal />}
+            {editInfos.show && <EditModal />}
+            {userInfos.show && <UserModal />}
         </main>
     )
 
