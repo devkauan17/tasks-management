@@ -50,7 +50,7 @@ export default function EditModal() {
                     {editInfos.completed ? 'Completa' : 'Incompleta'}
                 </button>
                 <div className='modal-buttons'>
-                    <button className='button' type='submit' onClick={handleEdit} disabled={!editInfos ? true : false}>Editar</button>
+                    <button className='button' type='submit' onClick={handleEdit} disabled={!editInfos.description ? true : false}>Editar</button>
                     <button className='button' type='button' onClick={handleClose}>Cancelar</button>
                 </div>
             </form>

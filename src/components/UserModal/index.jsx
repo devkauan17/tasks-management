@@ -13,10 +13,13 @@ export default function UserModal() {
     const navigate = useNavigate();
 
     const [userModal, setUserModal] = useState({
-        ...userInfos,
+        name: userInfos.name,
+        email: userInfos.email,
         currentPassword: '',
         newPassword: ''
     });
+
+    const [showNewPassInput, setShowNewPassInput] = useState(false)
 
     const [userError, setUserError] = useState({ message: '', type: '' })
     const handleClose = () => setUserInfos({ ...userInfos, show: false });
@@ -27,12 +30,7 @@ export default function UserModal() {
 
         try {
 
-            await instance.put('/user', {
-                name: userModal.name,
-                email: userModal.email,
-                currentPassword: userModal.currentPassword,
-                password: userModal.newPassword
-            }, {
+            await instance.put('/user', { ...userModal }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             handleGetUser()
@@ -75,7 +73,6 @@ export default function UserModal() {
                 <div className='input-label'>
                     <label className='label' htmlFor='name'>Nome</label>
                     <input
-                        required
                         className='input'
                         type="text"
                         placeholder='Digite o seu nome...'
@@ -87,7 +84,6 @@ export default function UserModal() {
                 <div className='input-label'>
                     <label className='label' htmlFor='email'>Email</label>
                     <input
-                        required
                         className={`input ${userError.type === 'invalidEmail' && 'input-error'}`}
                         type="text"
                         placeholder='Digite o seu email...'
@@ -97,7 +93,7 @@ export default function UserModal() {
                     />
                 </div>
                 <div className='input-label'>
-                    <label className='label' htmlFor='currentPassword'>Senha Atual</label>
+                    <label className='label' htmlFor='currentPassword'>Senha Atual*</label>
                     <PasswordInput
                         id='currentPassword'
                         className={userError.type === 'invalidPass' && 'input-error'}
@@ -105,21 +101,27 @@ export default function UserModal() {
                         onChange={(e) => setUserModal({ ...userModal, currentPassword: e.target.value })}
                     />
                 </div>
-                <div className='input-label'>
-                    <label className='label' htmlFor='newPassword'>Nova senha</label>
-                    <PasswordInput
-                        id='newPassword'
-                        value={userModal.newPassword}
-                        onChange={(e) => setUserModal({ ...userModal, newPassword: e.target.value })}
-                    />
-                </div>
+
+                {!showNewPassInput && <button className='button'
+                    type='button'
+                    onClick={() => setShowNewPassInput(true)}
+                >Atualizar senha</button>}
+
+                {showNewPassInput &&
+                    <div className='input-label'>
+                        <label className='label' htmlFor='newPassword'>Nova senha</label>
+                        <PasswordInput
+                            id='newPassword'
+                            value={userModal.newPassword}
+                            onChange={(e) => setUserModal({ ...userModal, newPassword: e.target.value })}
+                        />
+                    </div>
+                }
+
                 {userError.message && <span className='span-error'>{userError.message}</span>}
                 <div className='modal-buttons'>
                     <button className='button' type='submit' disabled={
-                        !userModal.name ||
-                            !userModal.email ||
-                            !userModal.newPassword ||
-                            !userModal.currentPassword ? true : false
+                        !userModal.currentPassword
                     }>Atualizar dados</button>
                     <button className='button' type='button' onClick={handleLogout}>Logout</button>
                 </div>

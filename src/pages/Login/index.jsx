@@ -26,7 +26,7 @@ export default function Login() {
             localStorage.setItem('token', data.token);
             return navigate('/dashboard')
         } catch (error) {
-            const message = error.response.data;
+            const message = error.response;
 
             if (message === 'Email ou senha inválida.') {
                 return setLoginError({ message, type: 'invalidLogin' })
@@ -42,7 +42,7 @@ export default function Login() {
                 return setLoginError({ message, type: 'invalidPass' })
             }
 
-            console.log(error)
+            console.log(error.message)
             return setLoginError({ message: 'Erro interno. Tente Novamente.', type: '' })
         }
 

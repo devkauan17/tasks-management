@@ -44,12 +44,6 @@ export default function Home() {
             return setAddTaskValue('');
 
         } catch (error) {
-            const message = error.response.data
-
-            if (message === 'Essa tarefa já existe.') {
-                setTaskError({ message, type: 'AlreadyTask' })
-                return setAddTaskValue('')
-            }
 
             console.log(error)
             return setTaskError({ message: 'Erro interno. Tente novamente.', type: '' })
@@ -81,7 +75,7 @@ export default function Home() {
     return (
         <main className='page'>
             <header className='tasks-header'>
-                <h1 className='title'>{userInfos.name}</h1>
+                <h1 className='title'>{!userInfos.name ? 'carregando...' : userInfos.name}</h1>
                 <button className='button tasks-header-button'
                     onClick={() => setUserInfos({ ...userInfos, show: true })}
                 >Minha conta</button>
@@ -95,7 +89,7 @@ export default function Home() {
 
                     <div className='input-button-task'>
                         <input
-                            className={`input ${taskError.type === 'AlreadyTask' && 'input-error'}`}
+                            className='input'
                             type="text"
                             placeholder='Adicione uma tarefa...'
                             style={{ marginBottom: '1rem' }}
